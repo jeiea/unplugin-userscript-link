@@ -6,7 +6,13 @@ import { bundleUserscript, getLinkResourceKeys } from "./header_helpers.ts";
 import { type Header, mainModuleKey } from "./header_helpers/internal.ts";
 import { SyncMap } from "./sync_map.ts";
 
+/** Options for the userscript plugin. */
 export type UserscriptPluginOptions = {
+  /**
+   * [TamperDAV](https://github.com/Tampermonkey/tamperdav) sync directory for applying scripts to tampermonkey instantly.
+   *
+   * Outputs will be written to the directory as well.
+   */
   syncDirectory?: string;
 };
 
