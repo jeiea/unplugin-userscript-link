@@ -1,33 +1,40 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# This workflow will install Deno and run tests across stable and canary builds on Windows, Ubuntu and macOS.
-# For more information see: https://github.com/denoland/setup-deno
-
-name: Deno
+name: Check or publish
 
 on:
   push:
-    branches: [stage]
+    branches:
+      - main
+      - release
   pull_request:
-    branches: [stage, main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  check-and-push:
-    runs-on: ubuntu-latest
+  check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    permissions:
+      contents: read
+      id-token: write # The OIDC ID token is used for authentication with JSR.
     steps:
-      - uses: actions/checkout@v4
+      # Deno fmt requires LF line endings on Windows.
+      - run: git config --global core.autocrlf false
 
+      - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
 
-      - run: deno fmt --check
-      - run: deno lint
-      - run: deno check mod.ts
+      - run: deno task ci
 
-      - name: Push to main
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          git fetch origin $(git branch --show-current) --depth=50
-          git push origin HEAD:main
+  publish:
+    needs: check
+    if: ${{ github.ref_name == 'release' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+
+      - run: deno publish
