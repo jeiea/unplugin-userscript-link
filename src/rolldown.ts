@@ -1,3 +1,7 @@
+/**
+ * Rolldown plugin for userscripts. See readme for details.
+ */
+
 import type { RolldownPluginOption } from "npm:rolldown";
 import { createRolldownPlugin } from "npm:unplugin";
 import { unpluginFactory, type UserscriptPluginOptions } from "./unplugin_factory.ts";
