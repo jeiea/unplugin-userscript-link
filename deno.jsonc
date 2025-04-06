@@ -1,6 +1,6 @@
 {
   "name": "@jeiea/unplugin-userscript-link",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "exports": {
     ".": "./src/unplugin.ts",
     "./rolldown": "./src/rolldown.ts"
@@ -23,6 +23,9 @@
     "lineWidth": 100
   },
   "exclude": ["test/data"],
+  "publish": {
+    "include": ["src", "README.md", "LICENSE", "deno.jsonc"]
+  },
   "imports": {
     "npm:ky": "npm:ky@^1",
     "npm:unplugin": "npm:unplugin@^2",
