@@ -1,7 +1,8 @@
-import { fromFileUrl, resolve } from "jsr:@std/path";
+import { fromFileUrl } from "jsr:@std/path@^1/from-file-url";
+import { resolve } from "jsr:@std/path@^1/resolve";
 import ky from "npm:ky";
 import { extractUserscriptHeader } from "./header_helpers.ts";
-import { Header } from "./header_helpers/internal.ts";
+import type { Header } from "./header_helpers/internal.ts";
 
 const cache = new Map<string, Response>();
 export const _internals = {

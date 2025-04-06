@@ -1,6 +1,8 @@
-import { basename, join, resolve } from "jsr:@std/path";
+import { basename } from "jsr:@std/path@^1/basename";
+import { join } from "jsr:@std/path@^1/join";
+import { resolve } from "jsr:@std/path@^1/resolve";
 import { extractUserscriptHeader } from "./header_helpers.ts";
-import { Header } from "./header_helpers/internal.ts";
+import type { Header } from "./header_helpers/internal.ts";
 
 /** @internal */
 export type PathMap = Map<string | null, Map<string, { path: string; metaPath: string }>>;

@@ -1,10 +1,10 @@
 import { assertEquals } from "jsr:@std/assert/equals";
-import { extractUserscriptHeader, mergeHeader } from "../lib/header_helpers.ts";
+import { extractUserscriptHeader, mergeHeader } from "../src/header_helpers.ts";
 import {
   renderBundleHeader,
   renderFooterScript,
   renderHeaderScript,
-} from "../lib/header_helpers/internal.ts";
+} from "../src/header_helpers/internal.ts";
 
 Deno.test("Given userscript header parser", async (test) => {
   const parse = extractUserscriptHeader;

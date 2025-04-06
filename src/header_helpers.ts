@@ -1,5 +1,5 @@
 import {
-  Header,
+  type Header,
   isLibraryHeader,
   mainModuleKey,
   renderBundleHeader,

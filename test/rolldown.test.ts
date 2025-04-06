@@ -1,7 +1,7 @@
 import { expect } from "jsr:@std/expect";
 import { join, toFileUrl } from "jsr:@std/path";
 import { build, type OutputChunk } from "npm:rolldown";
-import userscriptPlugin from "../lib/rolldown.ts";
+import userscriptPlugin from "../src/rolldown.ts";
 import { assertDirectoryEquals, mockKy, setup } from "./commons.ts";
 
 Deno.test({

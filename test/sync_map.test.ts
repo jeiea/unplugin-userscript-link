@@ -1,7 +1,7 @@
 import { assert, assertEquals, assertMatch, assertRejects } from "jsr:@std/assert";
 import { join, resolve } from "jsr:@std/path";
 import { FakeTime } from "jsr:@std/testing/time";
-import { getOrCreate, getUserscriptMap, PathMap, writeMetaJson } from "../lib/sync_map.ts";
+import { getOrCreate, getUserscriptMap, type PathMap, writeMetaJson } from "../src/sync_map.ts";
 
 Deno.test("Given empty sync directory", async (test) => {
   const directory = await Deno.makeTempDir();

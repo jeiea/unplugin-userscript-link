@@ -1,9 +1,9 @@
-import { resolve } from "jsr:@std/path/resolve";
+import { resolve } from "jsr:@std/path@^1/resolve";
 import type { OutputAsset, OutputChunk, RolldownPlugin } from "npm:rolldown";
 import type { UnpluginFactory } from "npm:unplugin";
 import { collectUserscriptHeaders } from "./collect_userscript_headers.ts";
 import { bundleUserscript, getLinkResourceKeys } from "./header_helpers.ts";
-import { Header, mainModuleKey } from "./header_helpers/internal.ts";
+import { type Header, mainModuleKey } from "./header_helpers/internal.ts";
 import { SyncMap } from "./sync_map.ts";
 
 export type UserscriptPluginOptions = {
