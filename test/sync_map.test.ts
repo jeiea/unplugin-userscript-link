@@ -150,7 +150,7 @@ Deno.test("Given empty sync map", async (test) => {
   const syncMap = new Map();
 
   await test.step("when add no header", async (test) => {
-    const path = getOrCreate(syncMap, { header: {}, directory: "" });
+    const path = getOrCreate(syncMap, { metadata: {}, directory: "" });
 
     await test.step("it should not modify map", () => {
       assertEquals(syncMap, new Map([]));
@@ -168,7 +168,7 @@ Deno.test("Given sync map containing userscript", async (test) => {
 
   await test.step("when add same userscript", async (test) => {
     const path = getOrCreate(syncMap, {
-      header: { ["@name"]: ["example"] },
+      metadata: { "@name": ["example"] },
       directory: "",
     });
 
@@ -183,7 +183,7 @@ Deno.test("Given empty sync map", async (test) => {
 
   await test.step("when add new userscript", async (test) => {
     const { path, metaPath } = getOrCreate(syncMap, {
-      header: { ["@name"]: ["example"] },
+      metadata: { "@name": ["example"] },
       directory: join("D:", "dav"),
     })!;
 

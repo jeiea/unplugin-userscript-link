@@ -1,8 +1,8 @@
 import { fromFileUrl } from "jsr:@std/path@^1/from-file-url";
 import { resolve } from "jsr:@std/path@^1/resolve";
 import ky from "npm:ky";
-import { extractUserscriptHeader } from "./header_helpers.ts";
-import type { Header } from "./header_helpers/internal.ts";
+import { extract } from "./userscript_metadata/extract.ts";
+import type { Metadata } from "./userscript_metadata/types.ts";
 
 const cache = new Map<string, Response>();
 export const _internals = {
@@ -18,14 +18,14 @@ export const _internals = {
 export async function collectUserscriptHeaders(
   id: string,
   url: string,
-): Promise<Record<string, Header>> {
+): Promise<Record<string, Metadata>> {
   const js = await readOrFetch(url);
   if (!js) {
     console.warn(`Cannot get ${url}`);
     return {};
   }
 
-  const header = extractUserscriptHeader(js);
+  const header = extract(js);
   if (!header) {
     return {};
   }

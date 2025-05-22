@@ -1,8 +1,8 @@
 import { basename } from "jsr:@std/path@^1/basename";
 import { join } from "jsr:@std/path@^1/join";
 import { resolve } from "jsr:@std/path@^1/resolve";
-import { extractUserscriptHeader } from "./header_helpers.ts";
-import type { Header } from "./header_helpers/internal.ts";
+import { extract } from "./userscript_metadata/extract.ts";
+import type { Metadata } from "./userscript_metadata/types.ts";
 
 /** @internal */
 export type PathMap = Map<string | null, Map<string, { path: string; metaPath: string }>>;
@@ -20,8 +20,8 @@ export class SyncMap {
     return this;
   };
 
-  getOrCreate = (header: Header) => {
-    return getOrCreate(this.#namespaces, { header, directory: this.#directory });
+  getOrCreate = (metadata: Metadata) => {
+    return getOrCreate(this.#namespaces, { metadata, directory: this.#directory });
   };
 }
 
@@ -51,7 +51,7 @@ export async function getUserscriptMap(path: string) {
       }
     }
 
-    const header = extractUserscriptHeader(script);
+    const header = extract(script);
     const name = header?.["@name"]?.[0];
     if (!name) {
       continue;
@@ -73,14 +73,14 @@ export async function getUserscriptMap(path: string) {
 
 export function getOrCreate(
   pathMap: PathMap,
-  { header, directory }: { header: Header; directory: string },
+  { metadata, directory }: { metadata: Metadata; directory: string },
 ) {
-  const name = header["@name"]?.[0];
+  const name = metadata["@name"]?.[0];
   if (!name) {
     return null;
   }
 
-  const namespaceMap = getOrCreateNamespaceMap(pathMap, header);
+  const namespaceMap = getOrCreateNamespaceMap(pathMap, metadata);
   return namespaceMap?.get(name) ?? (() => {
     const uuid = crypto.randomUUID();
     const item = {
@@ -115,8 +115,8 @@ export async function writeMetaJson(metaPath: string, name: string) {
   }
 }
 
-function getOrCreateNamespaceMap(namespaces: PathMap, header: Header) {
-  const namespace = header["@namespace"]?.[0] ?? null;
+function getOrCreateNamespaceMap(namespaces: PathMap, metadata: Metadata) {
+  const namespace = metadata["@namespace"]?.[0] ?? null;
   return namespaces.get(namespace) ?? (() => {
     const map = new Map<string, { path: string; metaPath: string }>();
     namespaces.set(namespace, map);

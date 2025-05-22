@@ -1,37 +1,39 @@
+import type { Metadata } from "../userscript_metadata/types.ts";
 import {
-  type Header,
   isLibraryHeader,
   mainModuleKey,
   renderBundleHeader,
   renderFooterScript,
   renderHeaderScript,
-} from "./header_helpers/internal.ts";
-export { getLinkResourceKeys } from "./header_helpers/internal.ts";
+} from "./internal.ts";
+export { getLinkResourceKeys } from "./internal.ts";
 
-export function extractUserscriptHeader(
-  code: string,
-): Header | undefined {
-  const header = code.match(
-    /(?:^\s*\/\/.*?==UserScript==.*?\r?\n)(?:^\s*\/\/.*\r?\n)+/m,
-  )?.[0];
-  if (!header) {
-    return;
+export function bundle(script: string, headers: Record<string, Metadata>): string {
+  const { [mainModuleKey]: mainHeader, ...subHeaders } = headers;
+  if (!mainHeader) {
+    throw new Error("main header not found");
   }
 
-  const matches = header.matchAll(/^\s*\/\/\s*(@\S+)\s+(.+)/gm);
-  const record: Record<string, string[]> = {};
-  for (const [, key, value] of matches) {
-    if (record[key!]) {
-      record[key!]!.push(value!);
-    } else {
-      record[key!] = [value!];
-    }
-  }
+  const isLib = isLibraryHeader(mainHeader);
+  const mergedHeader = Object.values(subHeaders).reduce(
+    merge,
+    mainHeader,
+  );
+  const finalHeader = replaceDateVersion(
+    isLib ? mergedHeader : insertRequireJsRequirements(mergedHeader),
+  );
 
-  return record;
+  const parts = [
+    renderBundleHeader(finalHeader),
+    renderHeaderScript(finalHeader),
+    removeComment(script),
+    renderFooterScript(finalHeader),
+  ];
+
+  return `${parts.filter(Boolean).join("\n").trim()}\n`;
 }
 
-export function mergeHeader(main: Header, sub: Header): Header {
+export function merge(main: Metadata, sub: Metadata): Metadata {
   const grantKey = "@grant";
   const grants = mergeAndSort(main[grantKey], sub[grantKey]);
 
@@ -57,40 +59,12 @@ export function mergeHeader(main: Header, sub: Header): Header {
   };
 }
 
-export function bundleUserscript(
-  script: string,
-  headers: Record<string, Header>,
-): string {
-  const { [mainModuleKey]: mainHeader, ...subHeaders } = headers;
-  if (!mainHeader) {
-    throw new Error("main header not found");
-  }
-
-  const isLib = isLibraryHeader(mainHeader);
-  const mergedHeader = Object.values(subHeaders).reduce(
-    mergeHeader,
-    mainHeader,
-  );
-  const finalHeader = replaceDateVersion(
-    isLib ? mergedHeader : insertRequireJsRequirements(mergedHeader),
-  );
-
-  const parts = [
-    renderBundleHeader(finalHeader),
-    renderHeaderScript(finalHeader),
-    removeComment(script),
-    renderFooterScript(finalHeader),
-  ];
-
-  return `${parts.filter(Boolean).join("\n").trim()}\n`;
-}
-
 function mergeAndSort(a?: string[], b?: string[]) {
   return [...new Set([...a ?? [], ...b ?? []])].sort();
 }
 
-function insertRequireJsRequirements(header: Header) {
-  return mergeHeader(header, { "@grant": ["GM.getResourceText"] });
+function insertRequireJsRequirements(header: Metadata) {
+  return merge(header, { "@grant": ["GM.getResourceText"] });
 }
 
 function removeComment(code: string) {
@@ -103,7 +77,7 @@ function removeComment(code: string) {
   return functionStrictStripped;
 }
 
-function replaceDateVersion(header: Header) {
+function replaceDateVersion(header: Metadata) {
   const version = header["@version"]?.[0];
   if (!version?.includes("{date_version}")) {
     return header;

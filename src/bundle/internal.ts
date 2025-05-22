@@ -1,14 +1,14 @@
-export type Header = Record<string, string[]>;
+import { render } from "../userscript_metadata/render.ts";
+import type { Metadata } from "../userscript_metadata/types.ts";
+
 export const mainModuleKey = "main";
 export const grantsModuleKey = "tampermonkey_grants";
 
-export function renderBundleHeader(header: Header): string {
-  return `// ==UserScript==
-${[...headerToRows(header)].map((x) => `// ${x}\n`).join("")}// ==/UserScript==
-"use strict";\n`;
+export function renderBundleHeader(metadata: Metadata): string {
+  return `${render(metadata)}\n"use strict";\n`;
 }
 
-export function renderHeaderScript(headers: Header) {
+export function renderHeaderScript(headers: Metadata) {
   if (isLibraryHeader(headers)) {
     return "";
   }
@@ -19,7 +19,7 @@ export function renderHeaderScript(headers: Header) {
   return `define("${mainModuleKey}", (require, exports, module) => {`;
 }
 
-export function renderFooterScript(header: Header) {
+export function renderFooterScript(header: Metadata) {
   if (isLibraryHeader(header) || !hasLinkResource(header)) {
     return "";
   }
@@ -38,19 +38,19 @@ async function load() {
 }`;
 }
 
-export function isLibraryHeader(mainHeader: Header) {
+export function isLibraryHeader(mainHeader: Metadata) {
   const requireJs = /\/require.js\b/;
   return mainHeader["@require"]?.every((x) => !x.match(requireJs)) ?? true;
 }
 
-export function getLinkResourceKeys(header: Header) {
+export function getLinkResourceKeys(header: Metadata) {
   return header["@resource"]?.flatMap((x) => {
     const key = x.split(/\s+/)?.[0];
     return key?.startsWith("link:") ? [key] : [];
   }) ?? [];
 }
 
-function renderGrantModuleDefinition(header: Header) {
+function renderGrantModuleDefinition(header: Metadata) {
   const grants = header["@grant"] ?? [];
   if (!grants.length) {
     return "";
@@ -66,38 +66,6 @@ function renderGrantModuleDefinition(header: Header) {
 requirejs.config({ deps: ["tampermonkey_grants"] });`;
 }
 
-function* headerToRows(header: Header) {
-  const keys = Object.keys(header);
-  const maxKeyLength = Math.max(...keys.map((x) => x.length));
-  const entries = Object.entries(header);
-  entries.sort(headerKeyComparer);
-
-  for (const [key, values] of entries) {
-    for (const value of values) {
-      yield `${key.padEnd(maxKeyLength)} ${value}`;
-    }
-  }
-}
-
-function headerKeyComparer(a: [string, string[]], b: [string, string[]]) {
-  const orderA = headerKeyOrder(a[0]);
-  const orderB = headerKeyOrder(b[0]);
-  return orderA - orderB;
-}
-
-function headerKeyOrder(name: string) {
-  switch (name) {
-    case "@grant":
-      return 1;
-    case "@require":
-      return 2;
-    case "@resource":
-      return 3;
-    default:
-      return 0;
-  }
-}
-
-function hasLinkResource(header: Header) {
+function hasLinkResource(header: Metadata) {
   return header["@resource"]?.some((x) => x.startsWith("link:"));
 }

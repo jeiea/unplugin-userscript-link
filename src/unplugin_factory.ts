@@ -1,10 +1,11 @@
 import { resolve } from "jsr:@std/path@^1/resolve";
 import type { OutputAsset, OutputChunk, RolldownPlugin } from "npm:rolldown";
 import type { UnpluginFactory } from "npm:unplugin";
+import { mainModuleKey } from "./bundle/internal.ts";
+import { bundle as bundleUserscript, getLinkResourceKeys } from "./bundle/mod.ts";
 import { collectUserscriptHeaders } from "./collect_userscript_headers.ts";
-import { bundleUserscript, getLinkResourceKeys } from "./header_helpers.ts";
-import { type Header, mainModuleKey } from "./header_helpers/internal.ts";
 import { SyncMap } from "./sync_map.ts";
+import type { Metadata } from "./userscript_metadata/types.ts";
 
 /** Options for the userscript plugin. */
 export type UserscriptPluginOptions = {
@@ -16,7 +17,7 @@ export type UserscriptPluginOptions = {
   syncDirectory?: string;
 };
 
-type HeadersMap = Record<string, Header>;
+type HeadersMap = Record<string, Metadata>;
 
 export function unpluginFactory(
   options?: UserscriptPluginOptions,
