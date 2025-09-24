@@ -47,10 +47,11 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 }) : target, mod));
 require("library1");
 require("npm:react");
-const react_jsx_runtime = __toESM(require("react/jsx-runtime"));
+let react_jsx_runtime = require("react/jsx-runtime");
+react_jsx_runtime = __toESM(react_jsx_runtime);
 var deps_exports = {};
 __reExport(deps_exports, require("@stitches/react"));
-__reExport(deps_exports, require("npm:react-dom"));
+__reExport(deps_exports, require("react-dom"));
 (0, deps_exports.render)( (0, react_jsx_runtime.jsx)("div", {}), document.body);
 
 

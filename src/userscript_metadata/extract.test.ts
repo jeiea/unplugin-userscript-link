@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert/equals";
+import { assertEquals } from "@std/assert/equals";
 import { extract } from "./extract.ts";
 
 Deno.test("extracting simple metadata block", () => {

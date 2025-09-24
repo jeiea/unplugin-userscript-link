@@ -1,4 +1,4 @@
-import { expect } from "@std/expect";
+import { assertEquals } from "@std/assert/equals";
 import { join, toFileUrl } from "@std/path";
 import { build, type OutputChunk } from "rolldown";
 import userscriptPlugin from "../src/rolldown.ts";
@@ -32,12 +32,12 @@ Deno.test({
         const actualExample = built[0].code.replace(/file:\/\/\S+/, "file://library1.user.js");
         const expectedExample = await Deno.readTextFile(join(output, "build/example.user.js"));
 
-        expect(actualExample).toEqual(expectedExample);
+        assertEquals(actualExample, expectedExample);
 
         const actualLibrary1 = (built[1] as OutputChunk).code;
         const expectedLibrary1 = await Deno.readTextFile(join(output, "build/library1.user.js"));
 
-        expect(actualLibrary1).toEqual(expectedLibrary1);
+        assertEquals(actualLibrary1, expectedLibrary1);
       });
 
       await test.step({
