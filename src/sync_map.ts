@@ -1,6 +1,6 @@
-import { basename } from "jsr:@std/path@^1/basename";
-import { join } from "jsr:@std/path@^1/join";
-import { resolve } from "jsr:@std/path@^1/resolve";
+import { basename } from "@std/path/basename";
+import { join } from "@std/path/join";
+import { resolve } from "@std/path/resolve";
 import { extract } from "./userscript_metadata/extract.ts";
 import type { Metadata } from "./userscript_metadata/types.ts";
 

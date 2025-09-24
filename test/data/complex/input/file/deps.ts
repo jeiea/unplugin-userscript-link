@@ -1,3 +1,4 @@
 export * from "@stitches/react";
-// @deno-types="npm:@types/react-dom"
-export * from "npm:react-dom";
+// @deno-types="@types/react-dom"
+export * from "react-dom";
+

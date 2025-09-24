@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert/equals";
+import { assertEquals } from "@std/assert/equals";
 import { merge } from "./mod.ts";
 
 Deno.test("Given userscript header merger", async (test) => {

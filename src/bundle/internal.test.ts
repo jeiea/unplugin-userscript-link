@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert/equals";
+import { assertEquals } from "@std/assert/equals";
 import { renderBundleHeader, renderFooterScript, renderHeaderScript } from "./internal.ts";
 
 Deno.test("Given userscript header renderer", async (test) => {

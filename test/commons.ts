@@ -1,8 +1,8 @@
-import { assertEquals } from "jsr:@std/assert/equals";
-import { copy } from "jsr:@std/fs/copy";
-import { dirname, fromFileUrl, join, resolve } from "jsr:@std/path";
-import { FakeTime } from "jsr:@std/testing/time";
-import ky from "npm:ky";
+import { assertEquals } from "@std/assert/equals";
+import { copy } from "@std/fs/copy";
+import { dirname, fromFileUrl, join, resolve } from "@std/path";
+import { FakeTime } from "@std/testing/time";
+import ky from "ky";
 import { _internals } from "../src/collect_userscript_headers.ts";
 
 export const dataDirectory = resolve(dirname(fromFileUrl(import.meta.url)), "data");

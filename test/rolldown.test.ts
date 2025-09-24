@@ -1,6 +1,6 @@
-import { expect } from "jsr:@std/expect";
-import { join, toFileUrl } from "jsr:@std/path";
-import { build, type OutputChunk } from "npm:rolldown";
+import { expect } from "@std/expect";
+import { join, toFileUrl } from "@std/path";
+import { build, type OutputChunk } from "rolldown";
 import userscriptPlugin from "../src/rolldown.ts";
 import { assertDirectoryEquals, mockKy, setup } from "./commons.ts";
 

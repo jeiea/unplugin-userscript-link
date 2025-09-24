@@ -1,6 +1,6 @@
-import { resolve } from "jsr:@std/path@^1/resolve";
-import type { OutputAsset, OutputChunk, RolldownPlugin } from "npm:rolldown";
-import type { UnpluginFactory } from "npm:unplugin";
+import { resolve } from "@std/path/resolve";
+import type { OutputAsset, OutputChunk, RolldownPlugin } from "rolldown";
+import type { UnpluginFactory } from "unplugin";
 import { mainModuleKey } from "./bundle/internal.ts";
 import { bundle as bundleUserscript, getLinkResourceKeys } from "./bundle/mod.ts";
 import { collectUserscriptHeaders } from "./collect_userscript_headers.ts";

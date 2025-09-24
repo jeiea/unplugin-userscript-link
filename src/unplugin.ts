@@ -4,7 +4,7 @@
  * It's not usable for other bundlers except rolldown, just for plugin convention.
  */
 
-import { createUnplugin, type UnpluginInstance } from "npm:unplugin";
+import { createUnplugin, type UnpluginInstance } from "unplugin";
 import { unpluginFactory, type UserscriptPluginOptions } from "./unplugin_factory.ts";
 
 /** Unplugin instance for userscripts. */

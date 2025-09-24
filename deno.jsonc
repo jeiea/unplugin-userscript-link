@@ -27,14 +27,18 @@
     "include": ["src", "README.md", "LICENSE", "deno.jsonc"]
   },
   "imports": {
-    "npm:ky": "npm:ky@^1",
-    "npm:unplugin": "npm:unplugin@^2",
-    "npm:rolldown": "npm:rolldown@^1.0.0-beta.7",
+    "@std/assert": "jsr:@std/assert@^1.0.14",
+    "@std/fs": "jsr:@std/fs@^1.0.19",
+    "@std/path": "jsr:@std/path@^1.1.2",
+    "@std/testing": "jsr:@std/testing@^1.0.15",
+    "ky": "npm:ky@^1.10.0",
     "@stitches/react": "npm:@stitches/react",
     "fflate": "npm:fflate",
     "react-dom": "npm:react-dom",
     "react": "npm:react",
-    "library1": "data:,export{}"
+    "library1": "data:,export{}",
+    "rolldown": "npm:rolldown@^1.0.0-beta.40",
+    "unplugin": "npm:unplugin@^2.3.10"
   },
   "compilerOptions": {
     "lib": ["deno.window", "DOM"],

@@ -1,6 +1,6 @@
-import { fromFileUrl } from "jsr:@std/path@^1/from-file-url";
-import { resolve } from "jsr:@std/path@^1/resolve";
-import ky from "npm:ky";
+import { fromFileUrl } from "@std/path/from-file-url";
+import { resolve } from "@std/path/resolve";
+import ky from "ky";
 import { extract } from "./userscript_metadata/extract.ts";
 import type { Metadata } from "./userscript_metadata/types.ts";
 
