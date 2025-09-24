@@ -8,11 +8,12 @@ Only supports rolldown for now.
 
 ```ts
 import userscriptLink from "jsr:@jeiea/unplugin-userscript-link/rolldown";
+import { defineConfig } from "rolldown";
 
 const plugins = [
   userscriptLink({ syncDirectory: Deno.env.get("OUTPUT_SYNC") }),
   // If you want to use https imports,
-  await import("npm:@deno/vite-plugin"),
+  (await import("@deno/vite-plugin")).default(),
 ];
 export default defineConfig([
   { input: "some-script-1.user.ts", plugins },
