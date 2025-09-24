@@ -6,7 +6,7 @@ on:
       - main
       - release
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, reopened, ready_for_review]
 
 jobs:
   check:
@@ -31,10 +31,28 @@ jobs:
     if: ${{ github.ref_name == 'release' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
 
       - run: deno publish
+
+      - name: Create and push tag with version
+        run: |
+          set -euo pipefail
+          VERSION=$(deno eval 'console.info(JSON.parse(Deno.readTextFileSync("deno.json")).version)')
+          TAG="v$VERSION"
+          echo "Version: $VERSION"
+
+          git config user.name "${{ github.event.pusher.name }}"
+          git config user.email "${{ github.event.pusher.email }}"
+          git fetch --unshallow --tags
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping."
+          else
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
