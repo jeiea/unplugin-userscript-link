@@ -1,4 +1,4 @@
-import type { Metadata } from "../userscript_metadata/types.ts";
+import type { Metadata } from "@jeiea/userscript-metadata";
 import {
   isLibraryHeader,
   mainModuleKey,

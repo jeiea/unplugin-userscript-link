@@ -1,3 +1,4 @@
+import type { Metadata } from "@jeiea/userscript-metadata";
 import { resolve } from "@std/path/resolve";
 import type { OutputAsset, OutputChunk, RolldownPlugin } from "rolldown";
 import type { UnpluginFactory } from "unplugin";
@@ -5,7 +6,6 @@ import { mainModuleKey } from "./bundle/internal.ts";
 import { bundle as bundleUserscript, getLinkResourceKeys } from "./bundle/mod.ts";
 import { collectUserscriptHeaders } from "./collect_userscript_headers.ts";
 import { SyncMap } from "./sync_map.ts";
-import type { Metadata } from "./userscript_metadata/types.ts";
 
 /** Options for the userscript plugin. */
 export type UserscriptPluginOptions = {

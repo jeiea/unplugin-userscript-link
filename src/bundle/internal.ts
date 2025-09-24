@@ -1,5 +1,4 @@
-import { render } from "../userscript_metadata/render.ts";
-import type { Metadata } from "../userscript_metadata/types.ts";
+import { type Metadata, render } from "@jeiea/userscript-metadata";
 
 export const mainModuleKey = "main";
 export const grantsModuleKey = "tampermonkey_grants";

@@ -1,8 +1,7 @@
+import { extract, type Metadata } from "@jeiea/userscript-metadata";
 import { basename } from "@std/path/basename";
 import { join } from "@std/path/join";
 import { resolve } from "@std/path/resolve";
-import { extract } from "./userscript_metadata/extract.ts";
-import type { Metadata } from "./userscript_metadata/types.ts";
 
 /** @internal */
 export type PathMap = Map<string | null, Map<string, { path: string; metaPath: string }>>;

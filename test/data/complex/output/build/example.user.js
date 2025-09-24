@@ -4,14 +4,14 @@
 // @description    for test
 // @description:ko 테스트
 // @version        230901010203
+// @author         someone
 // @namespace      https://somewhere.space
 // @exclude        *
 // @match          http://unused-field.space/
-// @author         someone
-// @grant          GM.getResourceText
 // @grant          GM_getValue
 // @grant          GM_setValue
 // @grant          GM_xmlhttpRequest
+// @grant          GM.getResourceText
 // @require        https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js
 // @resource       link:@stitches/react https://cdn.jsdelivr.net/npm/@stitches/react@1.2.8/dist/index.cjs
 // @resource       link:fflate          https://cdn.jsdelivr.net/npm/fflate@0.7.4/lib/browser.cjs

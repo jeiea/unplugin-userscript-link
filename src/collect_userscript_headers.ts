@@ -1,8 +1,7 @@
 import { fromFileUrl } from "@std/path/from-file-url";
 import { resolve } from "@std/path/resolve";
 import ky from "ky";
-import { extract } from "./userscript_metadata/extract.ts";
-import type { Metadata } from "./userscript_metadata/types.ts";
+import { extract, type Metadata } from "@jeiea/userscript-metadata";
 
 const cache = new Map<string, Response>();
 export const _internals = {

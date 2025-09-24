@@ -2,10 +2,10 @@
 // @name        example library 1
 // @description for test 1
 // @version     1.1.0
+// @author      someone1
 // @namespace   library namespace should not be merged.
 // @exclude     http://asdf.net/
 // @match       http://library.space/
-// @author      someone1
 // @grant       GM_setValue
 // @grant       GM_xmlhttpRequest
 // @resource    link:@stitches/react https://cdn.jsdelivr.net/npm/@stitches/react@1.2.8/dist/index.cjs
