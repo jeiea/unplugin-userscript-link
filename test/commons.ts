@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert/equals";
 import { copy } from "@std/fs/copy";
 import { dirname, fromFileUrl, join, resolve } from "@std/path";
 import { FakeTime } from "@std/testing/time";
-import { _internals } from "../src/collect_userscript_headers.ts";
+import { install } from "@jeiea/mock-fetch";
 
 export const dataDirectory = resolve(dirname(fromFileUrl(import.meta.url)), "data");
 
@@ -35,19 +35,17 @@ export async function setup(projectName: string) {
 }
 
 export function mockFetch(httpRoot: string) {
-  const originalFetchText = _internals.fetchText;
-  _internals.fetchText = async (url) => {
-    if (url.startsWith("http://localhost:8080/")) {
-      const relative = new URL(url).pathname;
+  const { instance, restore } = install();
+  instance.mock("* *", async (request) => {
+    if (request.url.startsWith("http://localhost:8080/")) {
+      const relative = new URL(request.url).pathname;
       const absolute = join(httpRoot, relative);
-      return await Deno.readTextFile(absolute);
+      return new Response(await Deno.readTextFile(absolute));
     }
-    return '"mocked"';
-  };
+    return new Response('"mocked"');
+  });
 
-  return function restoreFetch() {
-    _internals.fetchText = originalFetchText;
-  };
+  return restore;
 }
 
 export async function assertDirectoryEquals(actual: string, expected: string) {

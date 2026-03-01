@@ -1,6 +1,8 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@jeiea/mock-fetch@*": "0.1.0",
+    "jsr:@jeiea/mock-fetch@0.1": "0.1.0",
     "jsr:@jeiea/userscript-metadata@0.2": "0.2.0",
     "jsr:@std/assert@^1.0.13": "1.0.14",
     "jsr:@std/assert@^1.0.14": "1.0.14",
@@ -22,6 +24,9 @@
     "npm:unplugin@^2.3.10": "2.3.10"
   },
   "jsr": {
+    "@jeiea/mock-fetch@0.1.0": {
+      "integrity": "0ff382ffa03c8b3bbfc0d8ae13ba7fbeb661d1b4e110eb34292509510b67e4f2"
+    },
     "@jeiea/userscript-metadata@0.2.0": {
       "integrity": "d116e8f5fd3096dc534b3f4e3c0be20031cc54aac8229b786f0db7d4797a817d"
     },
@@ -641,6 +646,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@jeiea/mock-fetch@0.1",
       "jsr:@jeiea/userscript-metadata@0.2",
       "jsr:@std/assert@^1.0.14",
       "jsr:@std/fs@^1.0.19",

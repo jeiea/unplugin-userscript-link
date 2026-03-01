@@ -2,11 +2,6 @@ import { extract, type Metadata } from "@jeiea/userscript-metadata";
 import { fromFileUrl } from "@std/path/from-file-url";
 import { resolve } from "@std/path/resolve";
 
-type FetchText = (url: string) => Promise<string>;
-export const _internals = {
-  fetchText: defaultFetchText satisfies FetchText,
-};
-
 export async function collectUserscriptHeaders(
   id: string,
   url: string,
@@ -45,12 +40,12 @@ async function readOrFetch(id: string) {
         throw error;
       }
     case "url": {
-      return await _internals.fetchText(id);
+      return await fetchText(id);
     }
   }
 }
 
-async function defaultFetchText(url: string) {
+async function fetchText(url: string) {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Cannot fetch ${url}: ${response.status} ${response.statusText}`, {
