@@ -2,7 +2,6 @@ import { assertEquals } from "@std/assert/equals";
 import { copy } from "@std/fs/copy";
 import { dirname, fromFileUrl, join, resolve } from "@std/path";
 import { FakeTime } from "@std/testing/time";
-import ky from "ky";
 import { _internals } from "../src/collect_userscript_headers.ts";
 
 export const dataDirectory = resolve(dirname(fromFileUrl(import.meta.url)), "data");
@@ -35,26 +34,19 @@ export async function setup(projectName: string) {
   };
 }
 
-export function mockKy(httpRoot: string) {
-  const kyi = ky.create({
-    hooks: {
-      beforeRequest: [
-        async (request) => {
-          if (request.url.startsWith("http://localhost:8080/")) {
-            const relative = new URL(request.url).pathname;
-            const absolute = join(httpRoot, relative);
-            return new Response(await Deno.readTextFile(absolute));
-          }
-          return new Response('"mocked"');
-        },
-      ],
-    },
-  });
-  const originalKy = _internals.ky;
-  _internals.ky = kyi;
+export function mockFetch(httpRoot: string) {
+  const originalFetchText = _internals.fetchText;
+  _internals.fetchText = async (url) => {
+    if (url.startsWith("http://localhost:8080/")) {
+      const relative = new URL(url).pathname;
+      const absolute = join(httpRoot, relative);
+      return await Deno.readTextFile(absolute);
+    }
+    return '"mocked"';
+  };
 
-  return function restoreKy() {
-    _internals.ky = originalKy;
+  return function restoreFetch() {
+    _internals.fetchText = originalFetchText;
   };
 }
 

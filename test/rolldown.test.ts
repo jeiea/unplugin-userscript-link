@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert/equals";
 import { join, toFileUrl } from "@std/path";
 import { build, type OutputChunk } from "rolldown";
 import userscriptPlugin from "../src/rolldown.ts";
-import { assertDirectoryEquals, mockKy, setup } from "./commons.ts";
+import { assertDirectoryEquals, mockFetch, setup } from "./commons.ts";
 
 Deno.test({
   name: "Given example user script",
@@ -65,12 +65,12 @@ Deno.test({
 
 async function complexSetup(name: string) {
   const suite = await setup(name);
-  const restoreKy = mockKy(join(suite.paths.input, "http"));
+  const restoreFetch = mockFetch(join(suite.paths.input, "http"));
 
   return {
     paths: suite.paths,
     clear: async () => {
-      restoreKy();
+      restoreFetch();
       await suite.clear();
     },
   };

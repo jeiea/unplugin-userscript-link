@@ -32,7 +32,6 @@
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
     "@std/testing": "jsr:@std/testing@^1.0.15",
-    "ky": "npm:ky@^1.10.0",
     "@stitches/react": "npm:@stitches/react",
     "fflate": "npm:fflate",
     "react-dom": "npm:react-dom",

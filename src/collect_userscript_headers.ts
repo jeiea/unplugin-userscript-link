@@ -1,17 +1,10 @@
+import { extract, type Metadata } from "@jeiea/userscript-metadata";
 import { fromFileUrl } from "@std/path/from-file-url";
 import { resolve } from "@std/path/resolve";
-import ky from "ky";
-import { extract, type Metadata } from "@jeiea/userscript-metadata";
 
-const cache = new Map<string, Response>();
+type FetchText = (url: string) => Promise<string>;
 export const _internals = {
-  ky: ky.create({
-    hooks: {
-      beforeRequest: [(request) => {
-        return cache.get(request.url)?.clone();
-      }],
-    },
-  }),
+  fetchText: defaultFetchText satisfies FetchText,
 };
 
 export async function collectUserscriptHeaders(
@@ -52,9 +45,19 @@ async function readOrFetch(id: string) {
         throw error;
       }
     case "url": {
-      return await _internals.ky.get(id).text();
+      return await _internals.fetchText(id);
     }
   }
+}
+
+async function defaultFetchText(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Cannot fetch ${url}: ${response.status} ${response.statusText}`, {
+      cause: response,
+    });
+  }
+  return await response.text();
 }
 
 function getLinkResource(resource: string) {
