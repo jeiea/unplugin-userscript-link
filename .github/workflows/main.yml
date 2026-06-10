@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - release
   pull_request:
     types: [opened, reopened, ready_for_review]
 
@@ -16,7 +15,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     permissions:
       contents: read
-      id-token: write # The OIDC ID token is used for authentication with JSR.
     steps:
       # Deno fmt requires LF line endings on Windows.
       - run: git config --global core.autocrlf false
@@ -28,31 +26,23 @@ jobs:
 
   publish:
     needs: check
-    if: ${{ github.ref_name == 'release' && github.event_name == 'push' }}
+    if: ${{ github.ref_name == 'main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
+    concurrency:
+      group: jsr-publish-${{ github.repository }}
+      cancel-in-progress: false
     permissions:
       contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: denoland/setup-deno@v2
 
-      - run: deno publish
-
-      - name: Create and push tag with version
+      - name: Configure release tag author
         run: |
-          set -euo pipefail
-          VERSION=$(deno eval 'console.info(JSON.parse(Deno.readTextFileSync("deno.json")).version)')
-          TAG="v$VERSION"
-          echo "Version: $VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git config user.name "${{ github.event.pusher.name }}"
-          git config user.email "${{ github.event.pusher.email }}"
-          git fetch --unshallow --tags
-
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists. Skipping."
-          else
-            git tag -a "$TAG" -m "Release $TAG"
-            git push origin "$TAG"
-          fi
+      - run: deno task release

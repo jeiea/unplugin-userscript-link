@@ -6,15 +6,21 @@
     "./rolldown": "./src/rolldown.ts"
   },
   "tasks": {
-    "hooks:install": "deno run --allow-read=deno.json,deno.jsonc,.git/hooks/ --allow-write=.git/hooks/ jsr:@hongminhee/deno-task-hooks",
-    "hooks:pre-commit": {
-      "dependencies": ["fmt", "lint", "check", "test", "publish:check-dirty"]
+    "hooks:install": "deno run --allow-read=deno.json,.git/hooks/ --allow-write=.git/hooks/ jsr:@hongminhee/deno-task-hooks",
+    "hooks:pre-commit": { "dependencies": ["check", "publish:check-dirty"] },
+    "ci": { "dependencies": ["check", "publish:check"] },
+    "check": {
+      "dependencies": ["check:fmt", "check:lint", "check:test", "check:types", "check:changelog"]
     },
-    "ci": "deno task fmt && deno task lint && deno task check && deno task test && deno task publish:check",
-    "fmt": "deno fmt --check",
-    "lint": "deno lint",
-    "check": "deno check src test",
-    "test": "deno test --doc --allow-all",
+    "check:fmt": "deno fmt --check",
+    "check:lint": "deno lint",
+    "check:test": "deno test --doc --allow-all",
+    "check:types": "deno check src test scripts",
+    "check:changelog": "deno run --allow-read=deno.json,CHANGELOG.md scripts/changelog.ts --check",
+    "fix:fmt": "deno fmt",
+    "fix:lint": "deno lint --fix",
+    "changelog": "deno run --allow-read=deno.json --allow-run=git-cliff scripts/changelog.ts",
+    "release": "deno run --allow-read=deno.json --allow-net=jsr.io --allow-run=git,deno scripts/release.ts",
     "publish:check": "deno publish --dry-run",
     "publish:check-dirty": "deno publish --dry-run --allow-dirty"
   },
@@ -23,7 +29,7 @@
   },
   "exclude": ["test/data"],
   "publish": {
-    "include": ["src", "README.md", "LICENSE", "deno.jsonc"]
+    "include": ["src", "CHANGELOG.md", "README.md", "LICENSE", "deno.json"]
   },
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.5",
@@ -32,6 +38,7 @@
     "@std/assert": "jsr:@std/assert@^1.0.14",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
+    "@std/semver": "jsr:@std/semver@^1.0.8",
     "@std/testing": "jsr:@std/testing@^1.0.15",
     "@stitches/react": "npm:@stitches/react",
     "fflate": "npm:fflate",
