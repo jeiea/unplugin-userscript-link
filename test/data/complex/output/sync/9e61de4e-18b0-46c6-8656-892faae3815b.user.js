@@ -57,15 +57,14 @@ __reExport(deps_exports, require("react-dom"));
 
 });
 
-define("tampermonkey_grants", function() { Object.assign(this.window, { GM, GM_getValue, GM_setValue, GM_xmlhttpRequest }); });
-requirejs.config({ deps: ["tampermonkey_grants"] });
 load()
 
 async function load() {
   const links = GM.info.script.resources.filter(x => x.name.startsWith("link:"));
   await Promise.all(links.map(async ({ name }) => {
     const script = await GM.getResourceText(name)
-    define(name.replace("link:", ""), Function("require", "exports", "module", script))
+    const createModule = Function("GM", "GM_getValue", "GM_setValue", "GM_xmlhttpRequest", "return function(require, exports, module) {\n" + script + "\n}")
+    define(name.replace("link:", ""), createModule(GM, GM_getValue, GM_setValue, GM_xmlhttpRequest))
   }));
   require(["main"], () => {}, console.error);
 }

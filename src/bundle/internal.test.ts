@@ -137,23 +137,22 @@ async function load() {
     const rendered = render({
       "@require": ["https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"],
       "@resource": ["link:react https://cdn.jsdelivr.net/npm/react"],
-      "@grant": ["GM.setValue"],
+      "@grant": ["GM_getValue", "unsafeWindow", "window.close"],
     });
 
-    await test.step("it should import it", () => {
+    await test.step("it should inject grants without assigning window", () => {
       assertEquals(
         rendered,
         `});
 
-define("tampermonkey_grants", function() { Object.assign(this.window, { GM }); });
-requirejs.config({ deps: ["tampermonkey_grants"] });
 load()
 
 async function load() {
   const links = GM.info.script.resources.filter(x => x.name.startsWith("link:"));
   await Promise.all(links.map(async ({ name }) => {
     const script = await GM.getResourceText(name)
-    define(name.replace("link:", ""), Function("require", "exports", "module", script))
+    const createModule = Function("GM", "GM_getValue", "unsafeWindow", "return function(require, exports, module) {\\n" + script + "\\n}")
+    define(name.replace("link:", ""), createModule(GM, GM_getValue, unsafeWindow))
   }));
   require(["main"], () => {}, console.error);
 }`,
