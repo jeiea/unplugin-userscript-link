@@ -7,7 +7,10 @@
   },
   "tasks": {
     "hooks:install": "deno run --allow-read=deno.json,.git/hooks/ --allow-write=.git/hooks/ jsr:@hongminhee/deno-task-hooks",
-    "hooks:pre-commit": { "dependencies": ["check", "publish:check-dirty"] },
+    "hooks:pre-commit": "deno run -A npm:lint-staged@^17.0.5 --hide-unstaged --config lint-staged.config.ts",
+    "hooks:pre-commit:verify": {
+      "dependencies": ["check:test", "check:types", "check:changelog", "publish:check-dirty"]
+    },
     "ci": { "dependencies": ["check", "publish:check"] },
     "check": {
       "dependencies": ["check:fmt", "check:lint", "check:test", "check:types", "check:changelog"]
@@ -42,6 +45,7 @@
     "@std/testing": "jsr:@std/testing@^1.0.15",
     "@stitches/react": "npm:@stitches/react",
     "fflate": "npm:fflate",
+    "lint-staged": "npm:lint-staged@^17.0.5",
     "react-dom": "npm:react-dom",
     "react": "npm:react",
     "library1": "data:,export{}",
